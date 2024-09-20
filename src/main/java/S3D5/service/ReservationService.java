@@ -4,8 +4,9 @@ import S3D5.entities.Event;
 import S3D5.entities.Reservation;
 import S3D5.entities.User;
 import S3D5.exceptions.NotFoundEx;
-import S3D5.payloads.NewEventDTO;
+import S3D5.exceptions.UnauthorizedEx;
 import S3D5.payloads.NewReservationDTO;
+import S3D5.payloads.ReservationUpdateDTO;
 import S3D5.repositories.EventRepository;
 import S3D5.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,22 @@ public class ReservationService {
 
     public List<Event> findAllEvents() {
         return eventRepository.findAll();
+    }
+
+    public Reservation updateReservation(int reservationId, ReservationUpdateDTO reservationDTO, User currentUser) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NotFoundEx("Prenotazione non trovata"));
+
+        if (!(reservation.getUser().getId() == (currentUser.getId()))) {
+            throw new UnauthorizedEx("Non hai l'autorizzazione per modificare questa prenotazione.");
+        }
+
+        Event event = eventRepository.findById(reservationDTO.eventId())
+                .orElseThrow(() -> new NotFoundEx("Evento non trovato con id: " + reservationDTO.eventId()));
+
+        reservation.setEvent(event);
+
+        return reservationRepository.save(reservation);
     }
 
 }
