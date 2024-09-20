@@ -16,7 +16,7 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
 
-    public Event save(NewEventDTO body, User organizer) {
+    public Event createEvent(NewEventDTO body, User organizer) {
 
         Event newEvent = new Event(
                 body.title(),

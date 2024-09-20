@@ -24,6 +24,13 @@ public class EventController {
         return ResponseEntity.ok(event);
     }
 
+    @PostMapping
+    @PreAuthorize("hasAuthority('ORGANIZZATORE_DI_EVENTI')")
+    public ResponseEntity<Event> createEvent(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody NewEventDTO body) {
+        Event newEvent = eventService.createEvent(body, currentAuthenticatedUser);
+        return new ResponseEntity<>(newEvent, HttpStatus.CREATED);
+    }
+
     @PutMapping("/eventId")
     @PreAuthorize("hasAuthority('ORGANIZZATORE_DI_EVENTI')")
     public ResponseEntity<Event> updateEvent(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody NewEventDTO body) {
