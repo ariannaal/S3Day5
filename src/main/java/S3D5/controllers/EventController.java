@@ -41,8 +41,8 @@ public class EventController {
     @DeleteMapping("/{eventId}")
     @PreAuthorize("hasAuthority('ORGANIZZATORE_DI_EVENTI')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findByIdAndDelete(@PathVariable int id) {
-        this.eventService.findByIdAndDelete(id);
+    public void findByIdAndDelete(@PathVariable int eventId) {
+        this.eventService.findByIdAndDelete(eventId);
     }
 
 }
