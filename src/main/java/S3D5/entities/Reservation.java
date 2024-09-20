@@ -18,8 +18,7 @@ public class Reservation {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Reservation(int id, Event event, User user) {
-        this.id = id;
+    public Reservation(Event event, User user) {
         this.event = event;
         this.user = user;
     }
