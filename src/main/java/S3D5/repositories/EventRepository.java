@@ -11,4 +11,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     Optional<Event> findByUser(User user);
 
+    Optional<Event> findByIdAndUser(int eventId, User user);
+
 }

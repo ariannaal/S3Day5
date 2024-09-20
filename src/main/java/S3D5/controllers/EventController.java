@@ -31,10 +31,10 @@ public class EventController {
         return new ResponseEntity<>(newEvent, HttpStatus.CREATED);
     }
 
-    @PutMapping("/eventId")
+    @PutMapping("/{eventId}")
     @PreAuthorize("hasAuthority('ORGANIZZATORE_DI_EVENTI')")
-    public ResponseEntity<Event> updateEvent(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody NewEventDTO body) {
-        Event updatedEvent = eventService.updateEventByOrganizer(currentAuthenticatedUser, body);
+    public ResponseEntity<Event> updateEvent(@AuthenticationPrincipal User currentAuthenticatedUser, @PathVariable int eventId, @RequestBody NewEventDTO body) {
+        Event updatedEvent = eventService.updateEventByOrganizer(currentAuthenticatedUser, eventId, body);
         return new ResponseEntity<>(updatedEvent, HttpStatus.OK);
     }
 

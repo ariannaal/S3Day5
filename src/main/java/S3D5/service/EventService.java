@@ -48,24 +48,17 @@ public class EventService {
         this.eventRepository.delete(found);
     }
 
-    public Event findByIdAndUpdate(int id, Event newEvent) {
-
-        Event found = this.findById(id);
-        found.setTitle(newEvent.getTitle());
-        found.setDescription(newEvent.getDescription());
-        found.setPlace(newEvent.getPlace());
-        found.setAvailableSeats(newEvent.getAvailableSeats());
-        found.setUser(newEvent.getUser());
-        return this.eventRepository.save(found);
-    }
 
     public Event findEventByOrganizer(User organizer) {
         return eventRepository.findByUser(organizer)
                 .orElseThrow(() -> new NotFoundEx("Nessun evento trovato per l'organizzatore."));
     }
 
-    public Event updateEventByOrganizer(User organizer, NewEventDTO eventDTO) {
-        Event event = findEventByOrganizer(organizer);
+    public Event updateEventByOrganizer(User organizer, int eventId, NewEventDTO eventDTO) {
+
+        Event event = eventRepository.findByIdAndUser(eventId, organizer)
+                .orElseThrow(() -> new NotFoundEx("Evento non trovato o non appartenente all'organizzatore corrente."));
+
         event.setTitle(eventDTO.title());
         event.setDescription(eventDTO.description());
         event.setPlace(eventDTO.place());
