@@ -18,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
@@ -37,6 +39,27 @@ public class ReservationController {
 
         Reservation newReservation = reservationService.createReservation(reservationDTO, currentAuthenticatedUser);
         return new ResponseEntity<>(newReservation, HttpStatus.CREATED);
+    }
+
+    //visualizzare gli eventi a cui hanno prenotato gli utenti
+    @GetMapping("/{myreservations}")
+    @PreAuthorize("hasAuthority('UTENTE_NORMALE')")
+    public ResponseEntity<List<Reservation>> getMyReservations(
+            @AuthenticationPrincipal User currentAuthenticatedUser) {
+
+        List<Reservation> myReservations = reservationService.findReservationsByUser(currentAuthenticatedUser);
+        return new ResponseEntity<>(myReservations, HttpStatus.OK);
+    }
+
+    // per annullare la prenotazione
+    @DeleteMapping("/{reservationId}")
+    @PreAuthorize("hasAuthority('UTENTE_NORMALE')")
+    public ResponseEntity<Void> cancelReservation(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @PathVariable int reservationId) {
+
+        reservationService.cancelReservation(reservationId, currentAuthenticatedUser);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // l'utemte normale puo modifcare l'evento a cui partecipare

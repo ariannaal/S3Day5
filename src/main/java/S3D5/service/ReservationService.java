@@ -71,4 +71,21 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+
+    public List<Reservation> findReservationsByUser(User user) {
+        return reservationRepository.findByUser(user);
+    }
+
+    public void cancelReservation(int reservationId, User currentAuthenticatedUser) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NotFoundEx("Prenotazione non trovata"));
+
+        // per vedere sw la prenotazione appartiene all'utente autenticato
+        if (reservation.getUser().getId() != currentAuthenticatedUser.getId()) {
+            throw new UnauthorizedEx("Non hai l'autorizzazione per cancellare questa prenotazione.");
+        }
+
+        reservationRepository.delete(reservation);
+    }
+
 }
