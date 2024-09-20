@@ -36,6 +36,11 @@ public class ReservationService {
             throw new BadRequestEx("Nessun posto disponibile per l'evento.");
         }
 
+        boolean alreadyReserved = reservationRepository.existsByEventAndUser(event, user);
+        if (alreadyReserved) {
+            throw new BadRequestEx("Hai gia' una prenotazione per questo evento.");
+        }
+
 
         Reservation reservation = new Reservation(event, user);
 
