@@ -22,7 +22,7 @@ public class ReservationService {
     @Autowired
     private EventRepository eventRepository;
 
-    public Reservation save(NewReservationDTO body, User user) {
+    public Reservation createReservation(NewReservationDTO body, User user) {
 
         Event event = eventRepository.findById(body.eventId())
                 .orElseThrow(() -> new NotFoundEx("Evento non trovato con id: " + body.eventId()));

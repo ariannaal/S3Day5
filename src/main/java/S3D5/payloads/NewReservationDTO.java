@@ -1,14 +1,14 @@
 package S3D5.payloads;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 
 public record NewReservationDTO(
 
-        @NotEmpty(message = "L'id dell'evento e' obbligatorio!")
+        @NotNull(message = "L'id dell'evento e' obbligatorio!")
         Integer eventId,
 
-        @NotEmpty(message = "L'id dell'utente e' obbligatorio!")
+        @NotNull(message = "L'id dell'utente e' obbligatorio!")
         Integer userId
 
 ) {}
