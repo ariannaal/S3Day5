@@ -3,6 +3,7 @@ package S3D5.service;
 import S3D5.entities.Event;
 import S3D5.entities.Reservation;
 import S3D5.entities.User;
+import S3D5.exceptions.BadRequestEx;
 import S3D5.exceptions.NotFoundEx;
 import S3D5.exceptions.UnauthorizedEx;
 import S3D5.payloads.NewReservationDTO;
@@ -27,6 +28,14 @@ public class ReservationService {
 
         Event event = eventRepository.findById(body.eventId())
                 .orElseThrow(() -> new NotFoundEx("Evento non trovato con id: " + body.eventId()));
+
+        // verifica che ci siano ancora postri disponibili
+        int existingReservationsCount = reservationRepository.countByEvent(event);
+
+        if (existingReservationsCount >= event.getAvailableSeats()) {
+            throw new BadRequestEx("Nessun posto disponibile per l'evento.");
+        }
+
 
         Reservation reservation = new Reservation(event, user);
 
